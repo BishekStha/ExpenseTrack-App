@@ -1,0 +1,155 @@
+﻿@page "/dashboard"
+@using Components.Models
+@using System.Text.Json
+@using System.Diagnostics
+
+<div class="min-h-screen bg-gray-50 p-6">
+    <!-- Search and Filters -->
+    <div class="mb-6 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <input type="text"
+                   placeholder="Search transactions..."
+                   class="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <input type="date"
+                   class="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <input type="date"
+                   class="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+        </div>
+        <NavLink href="/transactions" class="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
+            + Add Transaction
+        </NavLink>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid-cols-5 mb-6 grid gap-4">
+        <div class="rounded-lg bg-white p-4 shadow">
+            <h3 class="text-sm font-medium text-gray-500">Total Inflows</h3>
+            <p class="text-xl font-bold text-green-600">$ @TotalInflows</p>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow">
+            <h3 class="text-sm font-medium text-gray-500">Total Outflows</h3>
+            <p class="text-xl font-bold text-red-600">$ @TotalOutflows</p>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow">
+            <h3 class="text-sm font-medium text-gray-500">Total Debts</h3>
+            <p class="text-xl font-bold text-orange-500">$ @TotalDebts</p>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow">
+            <h3 class="text-sm font-medium text-gray-500">Cleared Debts</h3>
+            <p class="text-xl font-bold text-green-600">$ @ClearedDebts</p>
+        </div>
+        <div class="rounded-lg bg-white p-4 shadow">
+            <h3 class="text-sm font-medium text-gray-500">Pending Debts</h3>
+            <p class="text-xl font-bold text-gray-800">$ @PendingDebts</p>
+        </div>
+    </div>
+
+    <!-- Top Transactions Table -->
+    <div class="rounded-lg bg-white p-4 shadow">
+        <h3 class="mb-4 text-lg font-bold text-gray-800">Top Five Transactions</h3>
+        <table class="w-full border-collapse text-left">
+            <thead>
+                <tr>
+                    <th class="border-b py-2 text-sm text-gray-600">Title</th>
+                    <th class="border-b py-2 text-sm text-gray-600">Amount</th>
+                    <th class="border-b py-2 text-sm text-gray-600">Type</th>
+                    <th class="border-b py-2 text-sm text-gray-600">Tags</th>
+                    <th class="border-b py-2 text-sm text-gray-600">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var each in userTransactions.Take(5))
+                {
+                    <tr>
+                        <td class="border-b py-2 text-gray-700">@each.Title</td>
+                        <td class="border-b py-2 text-gray-700">$@each.Amount</td>
+                        <td class="border-b py-2">
+                            <span class="rounded-full px-2 py-1 text-sm"
+                                  style="background-color: @(each.Type == UserTransactions.TransactionType.Credit ? "#d1fae5" :
+                                      each.Type == UserTransactions.TransactionType.Debit ? "#fee2e2" :
+                                      each.Type == UserTransactions.TransactionType.Debt ? "#fef3c7" : "#e5e7eb");
+                     color: @(each.Type == UserTransactions.TransactionType.Credit ? "#047857" :
+                              each.Type == UserTransactions.TransactionType.Debit ? "#b91c1c" :
+                              each.Type == UserTransactions.TransactionType.Debt ? "#92400e" : "#374151");">
+                                @each.Type
+                            </span>
+                        </td>
+                        <td class="border-b py-2 text-gray-700">@string.Join(", ", each.Tags)</td>
+                        <td class="border-b py-2 text-gray-700">@each.Date.ToShortDateString()</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code
+{
+    private double TotalInflows { get; set; } = 0.00;
+    private double TotalOutflows { get; set; } = 0.00;
+    private double TotalDebts { get; set; } = 0.00;
+    private double ClearedDebts { get; set; } = 0.00;
+    private double PendingDebts { get; set; } = 0.00;
+
+
+
+
+    private List<UserTransactions> userTransactions = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        try
+        {
+
+            // Ensure file exists
+            if (File.Exists(Utils.TRANSACTIONS))
+            {
+                // Read the entire file content
+                var jsonLines = File.ReadAllLines(Utils.TRANSACTIONS);
+
+                // Deserialize each line into a UserTransactions object
+                userTransactions = jsonLines
+                    .Where(line => !string.IsNullOrWhiteSpace(line)) // Skip empty lines
+                    .Select(line => JsonSerializer.Deserialize<UserTransactions>(line))
+                    .Where(transaction => transaction != null) // Skip null objects
+                    .ToList();
+            }
+            else
+            {
+                Debug.WriteLine($"File not found: {Utils.TRANSACTIONS}");
+            }
+            foreach(var each in userTransactions)
+            {
+                if (each.Type== UserTransactions.TransactionType.Credit)
+                {
+                    TotalInflows += each.Amount;
+                }
+                else if (each.Type == UserTransactions.TransactionType.Debit)
+                {
+                    TotalOutflows += each.Amount;
+                }
+                else if (each.Type == UserTransactions.TransactionType.Debt)
+                {
+                    TotalDebts += each.Amount;
+                    if (each.IsCleared)
+                    {
+                        ClearedDebts += each.Amount;
+                    }
+                    else
+                    {
+                        PendingDebts += each.Amount;
+                    }
+                }
+                
+                
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error reading transactions: {ex.Message}");
+        }
+    }
+}

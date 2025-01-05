@@ -1,0 +1,95 @@
+﻿@page "/"
+@inject NavigationManager NavManager
+
+<div class="flex min-h-screen items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
+        <h2 class="mb-1 text-center text-3xl font-bold">Expense Track</h2>
+        <p class="mb-4 text-center">Manage your finances with ease</p>
+
+        <EditForm Model="@this" OnValidSubmit="DoLogin">
+            <div class="mb-4">
+                <label for="username" class="mb-1 block text-sm font-medium text-gray-700">Username</label>
+                <input id="username"
+                       type="text"
+                       @bind-value="username"
+                       class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                       placeholder="Enter username" />
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="mb-1 block text-sm font-medium text-gray-700">Password</label>
+                <input id="password"
+                       type="password"
+                       @bind-value="password"
+                       class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                       placeholder="Enter password" />
+            </div>
+
+            <!-- Dropdown for Currency Types with Symbols -->
+            <div class="mb-6">
+                <label for="currency" class="mb-1 block text-sm font-medium text-gray-700">Currency Type</label>
+                <select id="currency"
+                        class="w-full rounded-md border bg-white px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="USD">USD ($) - United States Dollar</option>
+                    <option value="NPR">NPR (₨) - Nepalese Rupee</option>
+                    <option value="EUR">EUR (€) - Euro</option>
+                    <option value="GBP">GBP (£) - British Pound</option>
+                    <option value="INR">INR (₹) - Indian Rupee</option>
+                </select>
+            </div>
+
+            <button type="submit"
+                    class="w-full rounded-md bg-green-500 px-4 py-2 text-white transition-colors hover:bg-green-700">
+                Login
+            </button>
+        </EditForm>
+    </div>
+</div>
+
+@if (showErrorPopup)
+{
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="mx-4 w-full max-w-sm rounded-lg bg-white p-6">
+            <div class="mb-4 flex items-center">
+                <div class="mr-3 rounded-full bg-red-100 p-2">
+                    <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium">Login Failed</h3>
+            </div>
+            <p class="mb-4 text-gray-600">The username and password is incorrect</p>
+            <button @onclick="ClosePopup"
+                    class="w-full rounded-md bg-green-600 py-2 text-white transition-colors hover:bg-green-700">
+                Close
+            </button>
+        </div>
+    </div>
+}
+
+
+
+@code {
+    private string username { get; set; }
+    private string password { get; set; }
+    private bool showErrorPopup { get; set; } = false;
+
+    private void DoLogin()
+    {
+        if (username == "user" && password == "1234")
+        {
+            Utils.ISAUTHENTICATED = true;
+            NavManager.NavigateTo("/dashboard"); // Navigate to a valid page (replace "/home" as per your app)
+        }
+        else
+        {
+            showErrorPopup = true;
+            password = string.Empty; // Clear password on failed attempt
+        }
+    }
+
+    private void ClosePopup()
+    {
+        showErrorPopup = false;
+    }
+}

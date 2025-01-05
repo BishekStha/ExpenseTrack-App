@@ -1,0 +1,180 @@
+﻿@page "/transactions"
+@using System.Text.Json;
+@using ExpenseTrack.Components.Models
+
+<div class="mx-auto max-w-md rounded-lg bg-white p-4 shadow-sm">
+    <form method="post" @onsubmit="TransactionHandler" class="space-y-3">
+        <!-- Title and Amount (Always visible) -->
+        <div>
+            <label class="text-xs font-medium text-gray-700">Title</label>
+            <input type="text" placeholder="Title" @bind="Title" required
+                   class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" />
+        </div>
+
+        <div>
+            <label class="text-xs font-medium text-gray-700">Amount</label>
+            <input type="number" step="0.01" placeholder="Amount" @bind="Amount" required
+                   class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" />
+        </div>
+
+        <!-- Transaction Type and Date -->
+        <div class="grid-cols-2 grid gap-3">
+            <div>
+                <label class="text-xs font-medium text-gray-700">Type</label>
+                <select @bind="TransactionType" @bind:after="HandleTransactionTypeChange" required
+                        class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                    <option value="">Select Type</option>
+                    <option value="Credit">Credit</option>
+                    <option value="Debit">Debit</option>
+                    <option value="Debt">Debt</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-xs font-medium text-gray-700">Date</label>
+                <input type="date" @bind="Date" required
+                       class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" />
+            </div>
+        </div>
+
+        <!-- Conditional Fields based on Transaction Type -->
+        @if (TransactionType == "Credit" || TransactionType == "Debt")
+        {
+            <div>
+                <label class="text-xs font-medium text-gray-700">Source</label>
+                <input type="text" @bind="Source" placeholder="e.g., Salary, Bank Loan" required
+                       class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" />
+            </div>
+        }
+
+        @if (TransactionType == "Debt")
+        {
+            <div class="grid-cols-2 grid gap-3">
+                <div>
+                    <label class="text-xs font-medium text-gray-700">Due Date</label>
+                    <input type="date" @bind="DueDate" required
+                           class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500" />
+                </div>
+                <div class="mt-5 flex items-center">
+                    <input type="checkbox" @bind="IsCleared"
+                           class="h-3 w-3 rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                    <label class="ml-2 text-xs text-gray-700">Is Cleared</label>
+                </div>
+            </div>
+        }
+
+        <!-- Tag (Always visible) -->
+        <div>
+            <label class="text-xs font-medium text-gray-700">Tag</label>
+            <select @bind="Tags" required
+                    class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                <option value="">Select a tag</option>
+                <option value="Yearly">Yearly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Food">Food</option>
+                <option value="Drinks">Drinks</option>
+                <option value="Clothes">Clothes</option>
+                <option value="Gadgets">Gadgets</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Rent">Rent</option>
+                <option value="EMI">EMI</option>
+                <option value="Party">Party</option>
+            </select>
+        </div>
+
+        <!-- Notes (Always visible) -->
+        <div>
+            <label class="text-xs font-medium text-gray-700">Notes</label>
+            <textarea class="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      rows="2" @bind="Note"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="w-full rounded-md bg-green-500 px-4 py-1.5 text-sm text-white hover:bg-green-600 focus:outline-none focus:ring-1 focus:ring-green-500 focus:ring-offset-2">
+                Add Transaction
+            </button>
+        </div>
+    </form>
+
+    @if (!string.IsNullOrEmpty(error_message))
+    {
+        <p class="mt-2 text-sm text-red-500">@error_message</p>
+    }
+</div>
+
+@code {
+    private string? Title { get; set; }
+    private double? Amount { get; set; }
+    private string? TransactionType { get; set; }
+    private string? Tags { get; set; }
+    private DateTime Date { get; set; } = DateTime.Now;
+    private string? Note { get; set; }
+    private bool IsCleared { get; set; }
+    private DateTime DueDate { get; set; } = DateTime.Now;
+    private string? Source { get; set; }
+    private string error_message { get; set; } = string.Empty;
+
+    private void HandleTransactionTypeChange()
+    {
+        // Reset conditional fields when transaction type changes
+        if (TransactionType != "Debt")
+        {
+            IsCleared = false;
+            DueDate = DateTime.Now;
+        }
+        if (TransactionType != "Credit" && TransactionType != "Debt")
+        {
+            Source = null;
+        }
+        StateHasChanged();
+    }
+
+    private async Task TransactionHandler()
+    {
+        try
+        {
+            if (!Amount.HasValue || string.IsNullOrEmpty(TransactionType))
+            {
+                error_message = "Please fill in all required fields";
+                return;
+            }
+
+            var type = Enum.Parse<UserTransactions.TransactionType>(TransactionType);
+
+            var transaction = new UserTransactions(
+                title: Title,
+                amount: Amount.Value,
+                date: Date,
+                type: type,
+                tags: new List<string> { Tags },
+                notes: Note,
+                isCleared: IsCleared,
+                dueDate: type == UserTransactions.TransactionType.Debt ? DueDate : null,
+                source: (type == UserTransactions.TransactionType.Credit || type == UserTransactions.TransactionType.Debt) ? Source : null
+            );
+
+            string json = JsonSerializer.Serialize(transaction);
+            await File.AppendAllTextAsync(Utils.TRANSACTIONS, json + Environment.NewLine);
+
+            // Reset form
+            Title = null;
+            Amount = null;
+            TransactionType = null;
+            Tags = null;
+            Date = DateTime.Now;
+            Note = null;
+            IsCleared = false;
+            DueDate = DateTime.Now;
+            Source = null;
+            error_message = string.Empty;
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            error_message = $"Error: {ex.Message}";
+        }
+    }
+
+}

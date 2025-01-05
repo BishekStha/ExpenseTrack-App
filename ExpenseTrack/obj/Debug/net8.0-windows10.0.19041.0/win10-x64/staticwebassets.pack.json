@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\ExpenseTrack.styles.css"
     },
     {
+      "Id": "C:\\Users\\Bishal\\source\\repos\\ExpenseTrack\\ExpenseTrack\\wwwroot\\css\\TailwindInput.css",
+      "PackagePath": "staticwebassets\\css\\TailwindInput.css"
+    },
+    {
+      "Id": "C:\\Users\\Bishal\\source\\repos\\ExpenseTrack\\ExpenseTrack\\wwwroot\\css\\TailwindOutput.css",
+      "PackagePath": "staticwebassets\\css\\TailwindOutput.css"
+    },
+    {
       "Id": "C:\\Users\\Bishal\\source\\repos\\ExpenseTrack\\ExpenseTrack\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ExpenseTrack.Components;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace ExpenseTrack
 {
@@ -15,6 +17,17 @@ namespace ExpenseTrack
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            Debug.WriteLine(Utils.ROOTFOLDER);
+            if (!Directory.Exists(Utils.ROOTFOLDER))
+            {
+                Directory.CreateDirectory(Utils.ROOTFOLDER);
+
+            } 
+
+            if (!File.Exists(Utils.TRANSACTIONS))
+            {
+                File.Create(Utils.TRANSACTIONS);
+            }
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
