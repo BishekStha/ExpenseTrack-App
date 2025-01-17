@@ -1,52 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ExpenseTrack.Components.Models
 {
-    internal class UserTransactions
+    public enum TransactionType
     {
-        public enum TransactionType
-        {
-            Credit,
-            Debit,
-            Debt
-        }
+        Income,
+        Expense,
+        Debt
+    }
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string Title { get; set; }
-        public double Amount { get; set; }
-        public DateTime Date { get; set; }
-        public TransactionType Type { get; set; }
-        public List<string> Tags { get; set; } = new List<string>();
-        public string Notes { get; set; }
-        public bool IsCleared { get; set; }
-        public DateTime DueDate { get; set; }
-        public string Source { get; set; } // Used for Debt or Credit source (e.g., "Salary", "Bank Loan")
+    public class UserTransactions
+    {
+        public Guid Id { get; set; } = Guid.NewGuid(); // Automatically generated unique ID
+        public string Title { get; set; } // Title of the transaction
+        public double Amount { get; set; } // Amount involved in the transaction
+        public string? Tag { get; set; } // Optional tag for categorizing the transaction
+        public string? Note { get; set; } // Optional note for additional information
+        public DateTime Date { get; set; } // Date of the transaction
+        public TransactionType Type { get; set; } // Type of the transaction: Income, Expense, or Debt
+        public DateTime? DueDate { get; set; } // Nullable due date, applicable for debts
+        public string? Source { get; set; } // Optional source of the transaction
+        public bool IsCleared { get; set; } = false; // Indicates whether the transaction is cleared
 
-        // Parameterless constructor for deserialization
-        public UserTransactions() { }
-
-        // Overloaded constructor for manual initialization
-        public UserTransactions(string title, double amount, DateTime date, TransactionType type, List<string> tags = null, string notes = null, bool isCleared = false, DateTime? dueDate = null, string source = null)
+        // Updated constructor to allow nullable DueDate
+        public UserTransactions(string title, double amount, DateTime date, DateTime? dueDate, TransactionType type, string? tag = null, string? note = null, string? source = null)
         {
             Title = title;
             Amount = amount;
             Date = date;
+            DueDate = dueDate; // Supports nullable DateTime
             Type = type;
-            Tags = tags ?? new List<string>();
-            Notes = notes;
-            IsCleared = isCleared;
-            DueDate = dueDate ?? DateTime.MinValue;
+            Tag = tag;
+            Note = note;
             Source = source;
         }
 
-        // Method to check if the debt is cleared
-        public void ClearDebt()
+/*        // Overriding ToString for better debugging and logging
+        public override string ToString()
         {
-            if (Type == TransactionType.Debt && Amount > 0)
-            {
-                IsCleared = true;
-            }
-        }
+            return $"Transaction [Id={Id}, Title={Title}, Amount={Amount}, Date={Date}, Type={Type}, DueDate={(DueDate.HasValue ? DueDate.Value.ToString("yyyy-MM-dd") : "N/A")}, Source={Source}, IsCleared={IsCleared}]";
+        }*/
     }
 }

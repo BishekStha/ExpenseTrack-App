@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8AV5oVb2k1RuCvJ6Wl67ODpPrjVfXKnQpsfZhz27zBw=",
+  "Hash": "GuOCuuU6xgKLz75GJI+f90CmNQRDXXvl/2I52TrtgS4=",
   "Source": "ExpenseTrack",
   "BasePath": "/",
   "Mode": "Root",
@@ -167,6 +167,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.png"
+    },
+    {
+      "Identity": "C:\\Users\\Bishal\\source\\repos\\ExpenseTrack\\ExpenseTrack\\wwwroot\\Frame.png",
+      "SourceId": "ExpenseTrack",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Bishal\\source\\repos\\ExpenseTrack\\ExpenseTrack\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "Frame.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Frame.png"
     },
     {
       "Identity": "C:\\Users\\Bishal\\source\\repos\\ExpenseTrack\\ExpenseTrack\\wwwroot\\index.html",

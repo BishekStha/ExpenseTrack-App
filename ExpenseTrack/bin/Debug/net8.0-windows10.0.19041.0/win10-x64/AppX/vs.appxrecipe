@@ -30,13 +30,13 @@
     <AppXManifest Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2025-01-05T04:40:37.803</Modified>
+      <Modified>2025-01-17T00:41:11.552</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2025-01-04T16:35:01.191</Modified>
+      <Modified>2025-01-16T20:52:51.740</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\ExpenseTrack.runtimeconfig.json">
       <PackagePath>ExpenseTrack.runtimeconfig.json</PackagePath>
@@ -44,11 +44,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\ExpenseTrack.dll">
       <PackagePath>ExpenseTrack.dll</PackagePath>
-      <Modified>2025-01-05T04:40:37.507</Modified>
+      <Modified>2025-01-17T00:41:10.358</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>ExpenseTrack.exe</PackagePath>
-      <Modified>2025-01-05T04:40:37.513</Modified>
+      <Modified>2025-01-17T00:41:10.437</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\Resources\Raw\AboutAssets.txt">
       <PackagePath>AboutAssets.txt</PackagePath>
@@ -72,11 +72,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\wwwroot\css\TailwindOutput.css">
       <PackagePath>wwwroot\css\TailwindOutput.css</PackagePath>
-      <Modified>2025-01-05T03:39:29.866</Modified>
+      <Modified>2025-01-16T20:53:53.951</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\wwwroot\favicon.png">
       <PackagePath>wwwroot\favicon.png</PackagePath>
       <Modified>2024-12-19T02:42:24.580</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\wwwroot\Frame.png">
+      <PackagePath>wwwroot\Frame.png</PackagePath>
+      <Modified>2025-01-16T20:44:51.060</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\wwwroot\index.html">
       <PackagePath>wwwroot\index.html</PackagePath>
@@ -316,7 +320,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\ExpenseTrack.deps.json">
       <PackagePath>ExpenseTrack.deps.json</PackagePath>
-      <Modified>2025-01-04T16:35:00.747</Modified>
+      <Modified>2025-01-16T20:52:51.411</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\.nuget\packages\microsoft.windows.sdk.net.ref\10.0.19041.34\lib\net6.0\Microsoft.Windows.SDK.NET.dll">
       <PackagePath>Microsoft.Windows.SDK.NET.dll</PackagePath>
@@ -684,19 +688,19 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\scopedcss\bundle\ExpenseTrack.styles.css">
       <PackagePath>wwwroot\ExpenseTrack.styles.css</PackagePath>
-      <Modified>2024-12-19T02:42:52.999</Modified>
+      <Modified>2025-01-16T05:34:58.485</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\scopedcss\projectbundle\ExpenseTrack.bundle.scp.css">
       <PackagePath>wwwroot\ExpenseTrack.bundle.scp.css</PackagePath>
-      <Modified>2024-12-19T02:42:53.002</Modified>
+      <Modified>2025-01-16T05:34:58.487</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\Components\Layout\MainLayout.razor.css">
       <PackagePath>Components\Layout\MainLayout.razor.css</PackagePath>
-      <Modified>2024-12-19T02:42:24.586</Modified>
+      <Modified>2025-01-16T05:29:18.120</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bishal\source\repos\ExpenseTrack\ExpenseTrack\Components\Layout\NavMenu.razor.css">
       <PackagePath>Components\Layout\NavMenu.razor.css</PackagePath>
-      <Modified>2024-12-19T02:42:24.588</Modified>
+      <Modified>2025-01-16T05:29:18.215</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

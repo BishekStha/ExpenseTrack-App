@@ -17,21 +17,19 @@ namespace ExpenseTrack
                 });
 
             builder.Services.AddMauiBlazorWebView();
-            Debug.WriteLine(Utils.ROOTFOLDER);
+
             if (!Directory.Exists(Utils.ROOTFOLDER))
             {
                 Directory.CreateDirectory(Utils.ROOTFOLDER);
-
-            } 
-
+            }
             if (!File.Exists(Utils.TRANSACTIONS))
             {
                 File.Create(Utils.TRANSACTIONS);
             }
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

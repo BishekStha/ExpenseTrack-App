@@ -1,4 +1,9 @@
-﻿@page "/tranactionsDetails"
+﻿@page "/transactionsDetails"
+@inject NavigationManager NavigationManager
+@using Components.Models
+@using System.Diagnostics
+@using System.Text.Json
+@using Components.Control
 
 <div class="min-h-screen bg-gray-100 p-6">
     <!-- Header Section -->
@@ -14,36 +19,49 @@
         <!-- Filter by Type -->
         <div>
             <label class="block text-sm font-medium text-gray-700">Transaction Type</label>
-            <select class="w-full rounded border-gray-300 bg-white px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+            <select @bind="selectedType" class="w-full rounded border-gray-300 bg-white px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                 <option value="all">All</option>
-                <option value="credit">Credit</option>
-                <option value="debit">Debit</option>
-                <option value="debt">Debt</option>
+                <option value="@TransactionType.Income">Income</option>
+                <option value="@TransactionType.Expense">Expense</option>
+                <option value="@TransactionType.Debt">Debt</option>
             </select>
         </div>
 
         <!-- Filter by Date Range -->
         <div>
             <label class="block text-sm font-medium text-gray-700">Date Range</label>
-            <input type="date" class="w-full rounded border-gray-300 px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <div class="grid-cols-2 grid gap-2">
+                <input type="date" @bind="selectedFromDate" class="w-full rounded border-gray-300 px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <input type="date" @bind="selectedToDate" class="w-full rounded border-gray-300 px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
         </div>
 
         <!-- Filter by Tags -->
         <div>
             <label class="block text-sm font-medium text-gray-700">Tags</label>
-            <select class="w-full rounded border-gray-300 bg-white px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+            <select @bind="selectedTag" class="w-full rounded border-gray-300 bg-white px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                 <option value="all">All</option>
+                <option value="yearly">Yearly</option>
                 <option value="monthly">Monthly</option>
+                <option value="food">Food</option>
+                <option value="drinks">Drinks</option>
+                <option value="clothes">Clothes</option>
+                <option value="gadgets">Gadgets</option>
+                <option value="miscellaneous">Miscellaneous</option>
+                <option value="fuel">Fuel</option>
                 <option value="rent">Rent</option>
-                <option value="groceries">Groceries</option>
-                <!-- Add more tags as needed -->
+                <option value="emi">EMI</option>
+                <option value="party">Party</option>
             </select>
+
         </div>
 
         <!-- Search Transactions -->
         <div>
             <label class="block text-sm font-medium text-gray-700">Search</label>
-            <input type="text" placeholder="Search by title..." class="w-full rounded border-gray-300 px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <input type="text" @bind="searchText" @bind:event="oninput"
+            placeholder="Search by title..."
+            class="w-full rounded border-gray-300 px-3 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
         </div>
     </div>
 
@@ -51,15 +69,15 @@
     <div class="grid-cols-1 mb-6 grid gap-4 md:grid-cols-3">
         <div class="rounded-lg bg-green-100 p-4 text-center shadow-md">
             <h2 class="text-lg font-bold text-green-700">Total Inflows</h2>
-            <p class="text-xl font-semibold text-green-900">$5,000</p>
+            <p class="text-xl font-semibold text-green-900">@totalInflows</p>
         </div>
         <div class="rounded-lg bg-red-100 p-4 text-center shadow-md">
             <h2 class="text-lg font-bold text-red-700">Total Outflows</h2>
-            <p class="text-xl font-semibold text-red-900">$2,500</p>
+            <p class="text-xl font-semibold text-red-900">@totalOutflows</p>
         </div>
         <div class="rounded-lg bg-yellow-100 p-4 text-center shadow-md">
             <h2 class="text-lg font-bold text-yellow-700">Pending Debts</h2>
-            <p class="text-xl font-semibold text-yellow-900">$1,200</p>
+            <p class="text-xl font-semibold text-yellow-900">@pendingDebts</p>
         </div>
     </div>
 
@@ -78,27 +96,153 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Example Transaction Rows -->
-                <tr class="border-b">
-                    <td class="px-4 py-2">Salary</td>
-                    <td class="px-4 py-2 text-green-700">Credit</td>
-                    <td class="px-4 py-2 text-gray-800">$3,000</td>
-                    <td class="px-4 py-2 text-gray-600">2025-01-05</td>
-                    <td class="px-4 py-2 text-gray-600">Monthly, Salary</td>
-                    <td class="px-4 py-2">
-                        <button class="text-sm text-green-600 hover:underline">Edit</button>
-                        <button class="text-sm text-red-600 hover:underline">Delete</button>
-                    </td>
-                </tr>
-                <!-- Add more rows dynamically -->
+                @foreach (var each in FilteredTransactions)
+                {
+                    <tr class="border-b">
+                        <td class="px-4 py-2">@each.Title</td>
+                        <td class="px-4 py-2 @(each.Type == TransactionType.Income ? "text-green-700" : each.Type == TransactionType.Expense ? "text-red-700" : "text-yellow-700")">
+                            @each.Type
+                        </td>
+                        <td class="px-4 py-2 text-gray-800">$@each.Amount</td>
+                        <td class="px-4 py-2 text-gray-600">@each.Date.ToShortDateString()</td>
+                        <td class="px-4 py-2 text-gray-600">@each.Tag</td>
+                        <td class="px-4 py-2">
+                            @if (each.Type != TransactionType.Debt)
+                            {
+                                <button class="text-sm text-red-600 hover:underline" @onclick="() => DeletTransaction(each.Id)">Delete</button>
+                            }
+                            else
+                            {
+								@if (each.IsCleared)
+								{
+									<span class="text-sm text-green-600">Cleared</span>
+								}
+								else
+								{
+									<button class="text-sm text-green-600 hover:underline" @onclick="() => PayDebt(each.Id)">Pay</button>
+								}
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </div>
 
 @code {
+    private List<UserTransactions> userTransactions = new List<UserTransactions>();
+    private string selectedType = "all";
+    private DateTime? selectedFromDate;
+    private DateTime? selectedToDate;
+
+    private string selectedTag = "all";
+    private string searchText = "";
+
+    private double totalInflows = 0.00;
+    private double totalOutflows = 0.00;
+    private double totalDebts = 0.00;
+    private double clearedDebts = 0.00;
+    private double pendingDebts = 0.00;
+    private double totalBalance = 0.00;
+
+    private List<UserTransactions> FilteredTransactions => userTransactions
+    .Where(t => selectedType == "all" || t.Type.ToString() == selectedType)
+    .Where(t => selectedFromDate == null || t.Date >= selectedFromDate)
+    .Where(t => selectedToDate == null || t.Date <= selectedToDate)
+    .Where(t => selectedTag == "all" || string.Equals(t.Tag, selectedTag, StringComparison.OrdinalIgnoreCase))
+    .Where(t => string.IsNullOrEmpty(searchText) || t.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+    .ToList();
+
+
+
     private void AddTransaction()
     {
-        // Logic to add a new transaction
+        NavigationManager.NavigateTo("/transactions");
     }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        try
+        {
+            userTransactions = TransactionController.GetAllTransaction();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+        }
+        CalculateTotals();
+    }
+
+    private void DeletTransaction(Guid id)
+    {
+        for (int i = 0; i < userTransactions.Count; i++)
+        {
+            if (userTransactions[i].Id == id)
+            {
+                userTransactions.RemoveAt(i);
+                break;
+            }
+        }
+        TransactionController.SaveTransactionList(userTransactions);
+		CalculateTotals();
+    }
+
+    private void CalculateTotals()
+    {
+        var allTransactions = TransactionController.GetAllTransaction();
+        totalInflows = TransactionController.GetTotalAmount(TransactionType.Income);
+        totalOutflows = TransactionController.GetTotalAmount(TransactionType.Expense);
+        foreach (var each in allTransactions)
+        {
+            if (each.Type == TransactionType.Debt)
+            {
+                if (each.IsCleared)
+                {
+                    clearedDebts += each.Amount;
+                }
+                else
+                {
+                    pendingDebts += each.Amount;
+                }
+            }
+        }
+        totalDebts = TransactionController.GetTotalAmount(TransactionType.Debt);
+        totalBalance = totalInflows - totalOutflows + pendingDebts;
+    }
+
+    private void PayDebt(Guid id)
+    {
+        try
+        {
+            var allTransactions = TransactionController.GetAllTransaction();
+            if (allTransactions.Any())
+            {
+                foreach (var each in allTransactions)
+                {
+                    if (each.Id == id)
+                    {
+                        // Mark the debt as cleared directly
+                        each.IsCleared = true;
+                        break;
+                    }
+                }
+            }
+
+            // Save the updated transaction list after marking the debt as cleared
+            TransactionController.SaveTransactionList(allTransactions);
+
+            // Recalculate the totals to reflect the changes
+            CalculateTotals();
+
+            // Trigger a page reload by navigating to the same URL
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+        }
+    }
+
 }
