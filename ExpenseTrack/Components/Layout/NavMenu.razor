@@ -1,7 +1,8 @@
-﻿<div class="w-64">
+﻿@inject NavigationManager NavManager
+<div class="w-64">
     <!-- Top Bar -->
     <div class="mt-4 flex items-center justify-start px-4 py-2">
-        <a class="text-xl font-bold text-black" href="/">Expense Track</a>
+        <a class="text-xl font-bold text-black" href="/dashboard">Expense Track</a>
     </div>
 
     <!-- Navigation Menu -->
@@ -24,18 +25,28 @@
             </div>
             <div>
                 <NavLink class="flex items-center space-x-2 px-4 py-3 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-200 hover:text-black"
-                         href="/tranactionsDetails">
+                         href="/transactionsDetails">
                     <i class="fas fa-exchange-alt"></i>
                     <span>Transactions Details</span>
                 </NavLink>
             </div>
             <div>
-                <NavLink class="flex items-center space-x-2 px-4 py-3 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-200 hover:text-black"
-                         href="transactions">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Debts</span>
-                </NavLink>
+                <button @onclick="Logout"
+                        class="flex w-full items-center space-x-2 px-4 py-3 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-200 hover:text-black">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
             </div>
+
         </nav>
     </div>
 </div>
+
+@code {
+    private void Logout()
+    {
+        Utils.ISAUTHENTICATED = false; // Clear authentication
+        NavManager.NavigateTo("/"); // Redirect to login page
+    }
+}
+

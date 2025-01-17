@@ -10,26 +10,26 @@
             <div class="mb-4">
                 <label for="username" class="mb-1 block text-sm font-medium text-gray-700">Username</label>
                 <input id="username"
-                       type="text"
-                       @bind-value="username"
-                       class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                       placeholder="Enter username" />
+                type="text"
+                @bind-value="username"
+                class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Enter username" />
             </div>
 
             <div class="mb-4">
                 <label for="password" class="mb-1 block text-sm font-medium text-gray-700">Password</label>
                 <input id="password"
-                       type="password"
-                       @bind-value="password"
-                       class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                       placeholder="Enter password" />
+                type="password"
+                @bind-value="password"
+                class="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Enter password" />
             </div>
 
             <!-- Dropdown for Currency Types with Symbols -->
             <div class="mb-6">
                 <label for="currency" class="mb-1 block text-sm font-medium text-gray-700">Currency Type</label>
                 <select id="currency"
-                        class="w-full rounded-md border bg-white px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                class="w-full rounded-md border bg-white px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                     <option value="USD">USD ($) - United States Dollar</option>
                     <option value="NPR">NPR (₨) - Nepalese Rupee</option>
                     <option value="EUR">EUR (€) - Euro</option>
@@ -39,7 +39,7 @@
             </div>
 
             <button type="submit"
-                    class="w-full rounded-md bg-green-500 px-4 py-2 text-white transition-colors hover:bg-green-700">
+            class="w-full rounded-md bg-green-500 px-4 py-2 text-white transition-colors hover:bg-green-700">
                 Login
             </button>
         </EditForm>
@@ -60,7 +60,7 @@
             </div>
             <p class="mb-4 text-gray-600">The username and password is incorrect</p>
             <button @onclick="ClosePopup"
-                    class="w-full rounded-md bg-green-600 py-2 text-white transition-colors hover:bg-green-700">
+            class="w-full rounded-md bg-green-600 py-2 text-white transition-colors hover:bg-green-700">
                 Close
             </button>
         </div>
@@ -76,7 +76,8 @@
 
     private void DoLogin()
     {
-        if (username == "user" && password == "1234")
+       
+        if (username == "user" && password == "user")
         {
             Utils.ISAUTHENTICATED = true;
             NavManager.NavigateTo("/dashboard"); // Navigate to a valid page (replace "/home" as per your app)
